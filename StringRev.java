@@ -1,8 +1,12 @@
+import java.util.Scanner;
 public class StringRev { 
   
-    public static void main(String[] args) 
+    public static void main(String[] args)	
     { 
-		String originalString = "This is a coding test. I like java so much. This is my day.";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter Paragraph : ");
+		String originalString = sc.nextLine();
+		//String originalString = "This is a coding test. I like java so much. This is my day.";
 		if(originalString != null && originalString.trim().length() > 0){
 			String lines[] = originalString.split("\\.");
 			if(null != lines && lines.length > 0) {
@@ -25,8 +29,8 @@ public class StringRev {
 					}
 				}
 				reversedString = reversedString.trim();
-				System.out.println("Original String:" + originalString); 	
-				System.out.println("Reversed String:" + reversedString); 	
+				System.out.println("\nOriginal String:" + originalString); 	
+				System.out.println("\nReversed String:" + reversedString); 	
 			}
 		}
 		else {System.out.println("Please Enter Valid String.");}
