@@ -1,113 +1,245 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import "./App.css";
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-/*
-function App() {
-  return (
+class ManipulationOutput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.showOriginalString = this.showOriginalString.bind(this);
+    this.showOriginalString = this.showOriginalString.bind(this);
+  }
+
+  showOriginalString() {
+    this.props.handleShow(this.props.originalString);
+  }
+
+  showReversedString() {
+    this.props.handleShow(this.props.reversedString);
+  }
+
+  render() {
+    return (
       <div>
-         <ProductList/>
+        <table align="center" width="485">
+          <tr>
+            <td colSpan="4">
+              <ColoredLine color="blue" />
+            </td>
+          </tr>
+          <tr>
+            {/*             <td style={{borderRight: 1, borderRightColor: "black"}}  >
+              <label><b>Output</b></label>
+            </td> */}
+            <td colSpan="4">
+              <label cols="50">
+                <b>Original String:-</b> &nbsp; {this.props.originalString}
+              </label>{" "}
+              <br />
+              {/* <button onClick={this.showOriginalString.bind(this)}>Show Original String</button> <br/> <br/> */}
+              <label>
+                <b>Reversed String:-</b> &nbsp; {this.props.reversedString}
+              </label>{" "}
+              <br />
+              {/*<button onClick={this.showReversedString.bind(this)}>Show Reversed String</button> <br/> <br/> */}
+              <label>
+                <b>words Skipped:-</b> &nbsp; {this.props.wordsSkipped}
+              </label>{" "}
+              <br />
+            </td>
+          </tr>
+        </table>
       </div>
-  );
-}
-*/
-
-function RevStr(e){  
-  e.preventDefault();
- // return alert('Name: ' + e.target.  + " - $" + );
-  
-  var i = 0;
-  var j = 0;
-  var reversedString = "";
-  //var originalString = "";
-  //var originalString = this.setState({ Paragraph: event.target.value });
-  //var No = this.setState({ no: event.target.value }) ;
-  //return alert(originalString);
-  //var No = no;
-  //var originalString = 'This is a coding test. I like java so much. This is my day.';
-  var originalString = "Hi there. My name is Sam. This is my lucky day. i like coding so much. This is it.";
-  //return alert(""+ originalString.trim().length);
-  if (originalString != null && originalString.trim().length > 0)
-   {
-      const lines = [] = originalString.split(".");
-      //return alert(lines);
-      if (null != lines && lines.length > 0) 
-      {
-        reversedString = "";
-        for ( i = 0; i <= lines.length - 1; i++) 
-        {
-          if (lines[i] != null && lines[i].trim().length > 0) 
-          {
-            const words= [] = lines[i].trim().split(" ");
-            
-            if (null != words && words.length > 2) 
-            {
-              for (j = words.length - 3; j >= 0; j--) 
-              {
-                reversedString += " " + words[j];
-              }
-
-              for (j = words.length - 2; j <= words.length - 1; j++) 
-              {
-                reversedString += " " + words[j];
-              }
-              reversedString += ".";
-            } 
-            else 
-            {
-              reversedString += lines[i] + ". ";
-            }
-          }
-        }
-        return alert( "Reversed String: " + reversedString.trim());
-      }
-    } 
-    else 
-    {
-      return alert("Please Enter Valid String.");
-    }
-  return alert("Reversed String:");
-}
-
-function StringRev(){
-  return(
-    <div>
-      <form>
-        Enter Paragraph:  <input type="text" placeholder="Enter Paragraph" name="Paragraph"/><br/><br/>
-        Skip last  <input type="text" placeholder="Enter no of" style={{ width:"70px" }} name="no"/>  words in a sentence.<br/><br/>
-        <button onClick={RevStr}>Submit</button>
-      </form>
-    </div>
-  )
-}
-
-class App extends React.Component{
-  render(){
-    return(
-      <div>
-        <StringRev/>
-      </div>
-    )
+    );
   }
 }
 
-export default App;
+const ColoredLine = ({ color }) => (
+  <hr
+    style={{
+      color: color,
+      backgroundColor: color,
+      height: 5,
+      marginRight: 0,
+      marginLeft: 0,
+    }}
+  />
+);
+
+class StringManipulationForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.reverseParagraph = this.reverseParagraph.bind(this);
+  }
+  reverseParagraph(e) {
+    e.preventDefault();
+
+    var i = 0;
+    var j = 0;
+    var reversedString = "";
+    var originalString = this.refs.originalString.value;
+    var noOfWordsToSkip = parseInt(this.refs.noOfWordsToSkip.value);
+
+    if (
+      originalString == undefined ||
+      originalString == null ||
+      originalString.trim().length <= 0
+    ) {
+      alert("Please Enter Valid String.");
+      return;
+    }
+    
+    if (isNaN(noOfWordsToSkip)) {
+      alert("Words to be skipped value must be a valid number.");
+      this.refs.noOfWordsToSkip.value = "";
+      return;
+    }
+
+    if (noOfWordsToSkip < 0) {
+      alert(
+        "Words to be skipped value must be greater than or equals to zero."
+      );
+      this.refs.noOfWordsToSkip.value = "";
+      return;
+    }
+
+    const lines = originalString.split(".");
+    if (null != lines && lines.length > 0) {
+      reversedString = "";
+      for (i = 0; i <= lines.length - 1; i++) {
+        if (lines[i] != null && lines[i].trim().length > 0) {
+          const words = lines[i].trim().split(" ");
+          if (null != words && words.length > noOfWordsToSkip) {
+            for (j = words.length - (noOfWordsToSkip + 1); j >= 0; j--) {
+              reversedString += " " + words[j];
+            }
+
+            for (
+              j = words.length - noOfWordsToSkip;
+              j <= words.length - 1;
+              j++
+            ) {
+              reversedString += " " + words[j];
+            }
+            reversedString += ".";
+          } else {
+            reversedString += lines[i] + ". ";
+          }
+        }
+      }
+      var manipulationOutput = {
+        originalString: this.refs.originalString.value,
+        reversedString: reversedString,
+        wordsSkipped: noOfWordsToSkip,
+      };
+
+      this.props.handleCreate(manipulationOutput);
+
+      this.refs.originalString.value = "";
+      this.refs.noOfWordsToSkip.value = "";
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.reverseParagraph}>
+          <table align="center">
+            <tr>
+              <td colSpan="4">
+                <label> String Manipulation </label>
+              </td>
+            </tr>
+            <tr>
+              <td colSpan="4">
+                <ColoredLine color="blue" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Input String &nbsp;</label>
+              </td>
+              <td colSpan="3">
+                <textarea cols="50" ref="originalString"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td colSpan="2" align="right">
+                Skip Last &nbsp;
+                <input
+                  type="text"
+                  placeholder=""
+                  ref="noOfWordsToSkip"
+                  size="1"
+                />
+              </td>
+              <td> words in a sentence</td>
+            </tr>
+            <tr>
+              <td colSpan="6" align="center">
+                <button style={{ width: 70 }}>run</button>
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    );
+  }
+}
+
+class ParagraphList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { total: 0, paragraphList: [] };
+  }
+
+  showManipulationOutput(stringValue) {
+    alert("Full String: " + stringValue);
+  }
+
+  createManipulationOutput(manipulationOutput) {
+    const paragraphListLength = this.state.paragraphList.length;
+
+    if (paragraphListLength == 5) {
+      this.setState({
+        paragraphList: this.state.paragraphList.splice(0, 1),
+        paragraphList: this.state.paragraphList.concat(manipulationOutput),
+      });
+    } else {
+      this.setState({
+        paragraphList: this.state.paragraphList.concat(manipulationOutput),
+      });
+    }
+    console.log(this.state.paragraphList);
+  }
+
+  render() {
+    var component = this;
+    console.log(component.state);
+    var manipulationOutputs = component.state.paragraphList.map(function (
+      manipulationOutput
+    ) {
+      if (manipulationOutput !== undefined) {
+        return (
+          <ManipulationOutput
+            originalString={manipulationOutput.originalString}
+            reversedString={manipulationOutput.reversedString}
+            wordsSkipped={manipulationOutput.wordsSkipped}
+            handleShow={component.showManipulationOutput}
+          />
+        );
+      } else {
+        return <div></div>;
+      }
+    });
+    return (
+      <div>
+        <StringManipulationForm
+          handleCreate={this.createManipulationOutput.bind(this)}
+        />
+        {manipulationOutputs}
+      </div>
+    );
+  }
+}
+export default ParagraphList;
